@@ -1,20 +1,25 @@
 import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { selectCurrentPosts } from '../app/slices/postSlice'
-import { useGetUsersMutation } from '../services/postApiSlice'
+import { selectCurrentPosts, selectPostsByUser } from '../app/slices/postSlice'
+import { useGetUsersMutation, useGetPostsByUserMutation } from '../services/postApiSlice'
 
-const usePagination = (itemsPerPage = 15, type) => {
+const usePagination = (itemsPerPage = 15, type, userId = null) => {
   const [getUsers] = useGetUsersMutation()
+  const [getPostsByUser] = useGetPostsByUserMutation()
   const [page, setPage] = useState(0)
 
   const users = useSelector(selectCurrentPosts)
+  const postsByUser = useSelector(selectPostsByUser)
 
   const types = {
-    users
+    users,
+    postsByUser
   }
   const items = types[type]
 
-  const limit = Math.ceil(items?.count / itemsPerPage)
+  const limit = type === 'postsByUser'
+    ? Math.ceil(items?.posts?.count / itemsPerPage)
+    : Math.ceil(items?.count / itemsPerPage)
 
   const queryOptions = {
     limit: itemsPerPage.toString(),
@@ -22,12 +27,18 @@ const usePagination = (itemsPerPage = 15, type) => {
   }
 
   const queries = {
-    users: () => getUsers({ ...queryOptions })
+    users: () => getUsers({ ...queryOptions }),
+    postsByUser: () => getPostsByUser({ userId, ...queryOptions })
   }
 
   useEffect(() => {
-    queries[type]()
-  }, [page])
+    if (type === 'postsByUser' && userId) {
+      queries[type]()
+    }
+    if (type === 'users') {
+      queries[type]()
+    }
+  }, [page, userId])
 
   const nextHandler = () => {
     return page < limit - 1 && setPage(page + 1)

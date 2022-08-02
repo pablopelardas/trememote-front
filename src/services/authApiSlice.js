@@ -18,6 +18,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
           dispatch(setCredentials({ user: data.user, accessToken: data.accessToken }))
         } catch (error) {
           // onError
+          alert(`Error ingresando! ${error.error.data}`)
           console.log(error)
         }
       }

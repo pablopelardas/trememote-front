@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 const initialState = {
   users: [],
   post: null,
+  postsByUser: null,
   postFetched: false
 }
 
@@ -19,14 +20,18 @@ export const postSlice = createSlice({
     },
     setPostFetched: (state, action) => {
       state.postFetched = action.payload
+    },
+    setPostsByUser: (state, action) => {
+      state.postsByUser = action.payload
     }
   }
 })
 
-export const { setPosts, setCurrentPost, setPostFetched } = postSlice.actions
+export const { setPosts, setCurrentPost, setPostFetched, setPostsByUser } = postSlice.actions
 
 export const selectCurrentPosts = (state) => state.post.users
 export const selectCurrentPost = (state) => state.post.post
 export const selectPostFetched = (state) => state.post.postFetched
+export const selectPostsByUser = (state) => state.post.postsByUser
 
 export default postSlice.reducer
