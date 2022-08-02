@@ -4,11 +4,11 @@ import { Outlet } from 'react-router-dom'
 import NavBar from '@/features/Ui/NavBar'
 const Layout = () => {
   return (
-    <div className='min-h-screen h-auto bg-slate-900'>
+    <main className='min-h-screen h-auto bg-slate-900'>
       <NavBar />
       <Outlet />
       <Menu />
-    </div>
+    </main>
   )
 }
 
