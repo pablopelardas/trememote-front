@@ -1,9 +1,14 @@
 import React from 'react'
 import { Form, Field, ErrorMessage, useFormik, FormikProvider } from 'formik'
+import { useCreatePostMutation, useUpdatePostMutation } from '@/services/postApiSlice'
 import { postSchema } from '@/utils/validationSchemas'
 import propTypes from 'prop-types'
+import { useNavigate } from 'react-router-dom'
 
 const PostForm = ({ post = null }) => {
+  const navigate = useNavigate()
+  const [createPost] = useCreatePostMutation()
+  const [updatePost] = useUpdatePostMutation()
   let initialState = {}
   if (!post) {
     initialState = {
@@ -19,16 +24,20 @@ const PostForm = ({ post = null }) => {
     }
   }
 
-  const inputHandler = (_, editor) => {
-    formik.setFieldValue('content', editor.getData())
-  }
-
   const handleSubmit = async (values, { setSubmitting }) => {
-    // values.type === 'POST'
-    //   ? // create new activity
-    //   : // update activity
-    console.log(values)
-    setSubmitting(false)
+    try {
+      if (values.type === 'POST') {
+        await createPost({ title: values.title, content: values.content })
+      } else {
+        await updatePost({ id: post.id, post: { title: values.title, content: values.content } })
+      }
+      console.log(values)
+    } catch (err) {
+      console.log(err)
+    } finally {
+      navigate('/')
+      setSubmitting(false)
+    }
   }
 
   const formik = useFormik({ initialValues: initialState, validationSchema: postSchema, onSubmit: handleSubmit })

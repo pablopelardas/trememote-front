@@ -11,7 +11,7 @@ const PostEditor = () => {
     : <PostForm post={post} />
 
   return (
-    <section>
+    <section className='flex justify-center items-center'>
       {content}
     </section>
   )
