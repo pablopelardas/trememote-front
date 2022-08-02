@@ -9,7 +9,18 @@ export const authApiSlice = apiSlice.injectEndpoints({
         url: '/auth/login',
         method: 'POST',
         body: { ...credentials }
-      })
+      }),
+      async onQueryStarted (query, { dispatch, queryFulfilled }) {
+        console.log(query)
+        try {
+          const { data } = await queryFulfilled
+          // onSuccess
+          dispatch(setCredentials({ user: data.user, accessToken: data.accessToken }))
+        } catch (error) {
+          // onError
+          console.log(error)
+        }
+      }
     }),
     getUserAuth: builder.query({
       query: () => '/auth',
