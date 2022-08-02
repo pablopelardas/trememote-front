@@ -6,16 +6,19 @@ import Auth from '@/views/Auth/Auth.jsx'
 import { useGetUserAuthQuery } from './services/authApiSlice.js'
 import RequireAuth from '@/features/Authentication/RequireAuth.jsx'
 import PostEditor from './views/PostEditor/PostEditor'
+import UserPosts from './views/UserPosts/UserPosts.jsx'
 function App () {
   useGetUserAuthQuery()
   return (
     <Routes>
       <Route path='/' element={<Layout />}>
-        <Route element={<RequireAuth />}>
           <Route index element={<Home />} />
-          <Route path="/edit/:id" element={<PostEditor />} />
-          <Route path='/create' element={<PostEditor />} />
           <Route path='/login' element={<Auth />} />
+          <Route path='/:userId' element={<UserPosts />} />
+          <Route path='/register' element={<Auth />} />
+        <Route element={<RequireAuth />}>
+          <Route path='/create' element={<PostEditor />} />
+          <Route path="/edit/:id" element={<PostEditor />} />
         </Route>
       </Route>
     </Routes>
